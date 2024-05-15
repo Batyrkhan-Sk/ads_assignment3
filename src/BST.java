@@ -3,8 +3,8 @@ import java.util.NoSuchElementException;
 import java.util.Stack;
 
 public class BST<K extends Comparable<K>, V> implements Iterable<BST.Entry<K, V>> {
-    private Node root;
-    private int size;
+    private Node root; // Root of the bst
+    private int size; // Number of elements in the tree
 
     private static class Node<K, V> {
         K key;
@@ -17,10 +17,11 @@ public class BST<K extends Comparable<K>, V> implements Iterable<BST.Entry<K, V>
         }
     }
 
+    // Inserting a key - value pair into the BST
     public void put(K key, V value) {
         root = put(root, key, value);
     }
-
+    // Recursively inserting a key - value pair into the BST
     private Node<K, V> put(Node<K, V> node, K key, V value) {
         if (node == null) {
             size++;
@@ -36,6 +37,7 @@ public class BST<K extends Comparable<K>, V> implements Iterable<BST.Entry<K, V>
         return node;
     }
 
+    // Retrieving the value associated with a key
     public V get(K key) {
         Node<K, V> node = root;
         while (node != null) {
@@ -50,10 +52,12 @@ public class BST<K extends Comparable<K>, V> implements Iterable<BST.Entry<K, V>
         return null;
     }
 
+    // Deleting a key - value pair from the BST
     public void delete(K key) {
         root = delete(root, key);
     }
 
+    // Recursively deleting a key - value pair from the BST
     private Node<K, V> delete(Node<K, V> node, K key) {
         if (node == null)
             return null;
@@ -76,12 +80,14 @@ public class BST<K extends Comparable<K>, V> implements Iterable<BST.Entry<K, V>
         return node;
     }
 
+    // Finding the minimum node in a subtree
     private Node<K, V> min(Node<K, V> node) {
         if (node.left == null)
             return node;
         return min(node.left);
     }
 
+    // Deleting the minimum node in a subtree
     private Node<K, V> deleteMin(Node<K, V> node) {
         if (node.left == null)
             return node.right;
@@ -89,10 +95,12 @@ public class BST<K extends Comparable<K>, V> implements Iterable<BST.Entry<K, V>
         return node;
     }
 
+    // Getting the number of elements in the BST
     public int size() {
         return size;
     }
 
+    // Class with an entry (key-value pair) in the BST
     public static class Entry<K, V> {
         private K key;
         private V value;
@@ -111,6 +119,7 @@ public class BST<K extends Comparable<K>, V> implements Iterable<BST.Entry<K, V>
         }
     }
 
+    // Iterator for in-order traversal of the BST
     private class InOrderIterator implements Iterator<Entry<K, V>> {
         private Stack<Node<K, V>> stack;
 
@@ -118,18 +127,19 @@ public class BST<K extends Comparable<K>, V> implements Iterable<BST.Entry<K, V>
             stack = new Stack<>();
             pushLeft(root);
         }
-
+        // Pushing nodes of a subtree onto the stack starting from the leftmost node
         private void pushLeft(Node<K, V> node) {
             while (node != null) {
                 stack.push(node);
                 node = node.left;
             }
         }
-
+        // Checking if there are more elements to iterate over
         public boolean hasNext() {
             return !stack.isEmpty();
         }
 
+        // Retrieving the next element in the in-order traversal
         public Entry<K, V> next() {
             if (!hasNext())
                 throw new NoSuchElementException();
@@ -140,6 +150,7 @@ public class BST<K extends Comparable<K>, V> implements Iterable<BST.Entry<K, V>
         }
     }
 
+    // Obtaining an iterator for in-order traversal of the BST
     public Iterator<Entry<K, V>> iterator() {
         return new InOrderIterator(root);
     }
